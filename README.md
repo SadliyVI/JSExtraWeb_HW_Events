@@ -1,5 +1,5 @@
 # Домашнее задание модуля "Расширенный инструментарий JawaScript в браузере"
 
-Тема: DOM
+Тема: Обработка событий
 
-![CI/CD](https://github.com/SadliyVI/JSExtraWeb_HW_DOM/actions/workflows/main.yml/badge.svg)
+![CI/CD](https://github.com/SadliyVI/JSExtraWeb_HW_Events/actions/workflows/main.yml/badge.svg)
