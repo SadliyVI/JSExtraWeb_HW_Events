@@ -2,7 +2,6 @@
     --cell-size: 96px;
 }
 
-
 body {
     font-family: Arial, Helvetica, sans-serif;
     display: flex;
@@ -13,8 +12,15 @@ body {
     background: #f0f4f8;
 }
 
+/* контейнер игры */
+#app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
-#game {
+/* сетка */
+.game-grid {
     display: grid;
     grid-template-columns: repeat(4, var(--cell-size));
     grid-template-rows: repeat(4, var(--cell-size));
@@ -24,7 +30,6 @@ body {
     border-radius: 12px;
     box-shadow: 0 6px 18px rgba(20, 20, 20, 0.08);
 }
-
 
 .cell {
     width: var(--cell-size);
@@ -38,10 +43,56 @@ body {
     overflow: hidden;
 }
 
-
 .cell img {
     max-width: 72%;
     max-height: 72%;
     user-select: none;
     pointer-events: none;
+}
+
+/* controls */
+.controls {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    align-items: center;
+}
+
+.score {
+    font-weight: 600;
+}
+
+/* restart button */
+.restart {
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: none;
+    background: #1976d2;
+    color: white;
+    cursor: pointer;
+}
+
+.game-over {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(160, 5, 5, 0.85);
+    color: white;
+    padding: 24px 28px;
+    border-radius: 10px;
+    z-index: 999;
+}
+
+.game-over-inner {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+#misses {
+    font-size: 22px;
+    margin-top: 10px;
+    color: #370c9b;
+    font-weight: bold;
+    text-align: center;
 }

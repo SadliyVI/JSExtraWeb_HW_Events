@@ -30,6 +30,10 @@ export default {
                 test: /\.(png|jpg|jpeg|gif|svg)$/i,
                 type: 'asset/resource',
             },
+            {
+                test: /\.(wav|mp3|ogg)$/i,
+                type: 'asset/resource',
+            }
         ],
     },
 
