@@ -3,6 +3,7 @@ export default class UI {
     this.container = container;
     this.banner = null;
     this.scoreEl = null;
+    this.missEl = null;
     this.restartBtn = null;
   }
 
@@ -12,8 +13,13 @@ export default class UI {
 
     const score = document.createElement('div');
     score.className = 'score';
-    score.textContent = 'Очки: 0';
+    score.textContent = 'Попадания: 0';
     this.scoreEl = score;
+
+    const misses = document.createElement('div');
+    misses.className = 'misses';
+    misses.textContent = 'Промахи: 0';
+    this.missEl = misses;
 
     const restart = document.createElement('button');
     restart.type = 'button';
@@ -21,7 +27,7 @@ export default class UI {
     restart.textContent = 'Новая игра';
     this.restartBtn = restart;
 
-    wrapper.append(score, restart);
+    wrapper.append(score, misses, restart);
     this.container.append(wrapper);
   }
 
@@ -29,12 +35,19 @@ export default class UI {
     if (this.scoreEl) this.scoreEl.textContent = `Попадания: ${n}`;
   }
 
-  showGameOver(score) {
+  updateMisses(n) {
+    if (this.missEl) this.missEl.textContent = `Промахи: ${n}`;
+  }
+
+  showGameOver(score, misses = 0) {
     if (this.banner) this.banner.remove();
+
+    const total = score + misses;
+    const percent = total === 0 ? 0 : Math.round((score / total) * 100);
 
     const ban = document.createElement('div');
     ban.className = 'game-over';
-    ban.innerHTML = `<div class="game-over-inner">Ваш результат: ${score} попаданий!</div>`;
+    ban.innerHTML = `<div class="game-over-inner">Удачных попыток: ${percent} %</div>`;
     this.container.append(ban);
     this.banner = ban;
   }

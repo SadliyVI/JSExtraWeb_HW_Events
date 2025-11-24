@@ -1,5 +1,5 @@
 export default class GoblinManager {
-  constructor(gridEl, gnomeSrc, showMs = 1000, handlers = {}) {
+  constructor(gridEl, gnomeSrc, showMs = 1000, handlers = {}, isRunning = () => true) {
     this.gridEl = gridEl;
     this.gnomeSrc = gnomeSrc;
     this.showMs = showMs;
@@ -8,6 +8,7 @@ export default class GoblinManager {
     this.imgEl = null;
     this.onMiss = handlers.onMiss || (() => {});
     this.onHit = handlers.onHit || (() => {});
+    this.isRunning = isRunning;
   }
 
   spawnImmediate() {
@@ -15,15 +16,21 @@ export default class GoblinManager {
   }
 
   _spawn() {
+    if (!this.isRunning()) return;
+
     const cells = Array.from(this.gridEl.querySelectorAll('.cell'));
     if (cells.length === 0) return;
+
     let idx = Math.floor(Math.random() * cells.length);
     if (idx === this.currentIndex) {
       idx = (idx + 1) % cells.length;
     }
+
     this._placeInCell(idx);
+
     if (this.timerId) clearTimeout(this.timerId);
     this.timerId = setTimeout(() => {
+      if (!this.isRunning()) return;
       if (this.imgEl && this.imgEl.parentElement) {
         this._removeFromCell();
         this.onMiss();
@@ -31,6 +38,7 @@ export default class GoblinManager {
       this._spawn();
     }, this.showMs);
   }
+
   _placeInCell(idx) {
     const cells = Array.from(this.gridEl.querySelectorAll('.cell'));
     const target = cells[idx];
@@ -51,7 +59,7 @@ export default class GoblinManager {
         this.timerId = null;
       }
       this._removeFromCell();
-      this.onHit();
+      if (this.isRunning()) this.onHit();
       this._spawn();
       return true;
     }
