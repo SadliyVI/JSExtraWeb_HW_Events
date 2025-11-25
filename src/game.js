@@ -25,9 +25,25 @@ export default class Game {
 
   start() {
     this.ui.createControls();
+    this._initGameSession();
+
+    this.ui.restartBtn.addEventListener('click', () => this.restart());
+  }
+
+  restart() {
+    this.ui.clearBanner();
+    this.score = 0;
+    this.misses = 0;
     this.ui.updateScore(this.score);
     this.ui.updateMisses(this.misses);
 
+    if (this.grid) this.grid.remove();
+    if (this.goblin) this.goblin.stop();
+
+    this._initGameSession();
+  }
+
+  _initGameSession() {
     let gridContainer = this.container.querySelector('#game-container');
     if (!gridContainer) {
       gridContainer = document.createElement('div');
@@ -37,6 +53,7 @@ export default class Game {
 
     this.grid = new Grid(gridContainer, this.size);
     this.grid.create();
+
     this.cursor.enable();
 
     this.running = true;
@@ -55,13 +72,7 @@ export default class Game {
     this.grid.onClick((cell) => {
       if (!this.running) return;
       const hit = this.goblin.handleClickOnCell(cell);
-      if (hit) {
-        this.sound.playHit();
-      }
-    });
-
-    this.ui.restartBtn.addEventListener('click', () => {
-      this.restart();
+      if (hit) this.sound.playHit();
     });
 
     this.goblin.spawnImmediate();
@@ -88,46 +99,6 @@ export default class Game {
     if (this.goblin) this.goblin.stop();
     this.cursor.disable();
     this.ui.showGameOver(this.score, this.misses);
-  }
-
-  restart() {
-    this.ui.clearBanner();
-    this.score = 0;
-    this.misses = 0;
-    this.ui.updateScore(this.score);
-    this.ui.updateMisses(this.misses);
-
-    if (this.grid) this.grid.remove();
-
-    let gridContainer = this.container.querySelector('#game-container');
-    this.grid = new Grid(gridContainer, this.size);
-    this.grid.create();
-
-    if (this.goblin) this.goblin.stop();
-
-    this.running = true;
-
-    this.goblin = new GoblinManager(
-      gridContainer.querySelector('#game'),
-      this.assets.gnome,
-      this.showMs,
-      {
-        onHit: () => this._onHit(),
-        onMiss: () => this._onMiss(),
-      },
-      () => this.running
-    );
-
-    this.grid.onClick((cell) => {
-      if (!this.running) return;
-      const hit = this.goblin.handleClickOnCell(cell);
-      if (hit) {
-        this.sound.playHit();
-      }
-    });
-
-    this.goblin.spawnImmediate();
-    this.cursor.enable();
   }
 
   stop() {
