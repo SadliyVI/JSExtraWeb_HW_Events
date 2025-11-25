@@ -7,4 +7,10 @@ module.exports = {
         '\\.(css|less|sass|scss)$': 'identity-obj-proxy',
         '\\.(png|jpg|jpeg|gif|svg|wav)$': '<rootDir>/__mocks__/fileMock.js',
     },
+    setupFilesAfterEnv: [],
+    globals: {
+        'babel-jest': {
+            diagnostics: false,
+        },
+    },
 };

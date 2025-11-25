@@ -4,6 +4,7 @@ export default class GoblinManager {
     this.gnomeSrc = gnomeSrc;
     this.showMs = showMs;
     this.currentIndex = null;
+    this.lastIndex = null; // индекс предыдущей ячейки
     this.timerId = null;
     this.imgEl = null;
     this.onMiss = handlers.onMiss || (() => {});
@@ -15,17 +16,26 @@ export default class GoblinManager {
     this._spawn();
   }
 
+  getNextIndex() {
+    const cells = Array.from(this.gridEl.querySelectorAll('.cell'));
+    if (cells.length === 0) return null;
+
+    let idx;
+    do {
+      idx = Math.floor(Math.random() * cells.length);
+    } while (idx === this.lastIndex && cells.length > 1);
+
+    this.lastIndex = idx;
+    return idx;
+  }
+
   _spawn() {
     if (!this.isRunning()) return;
 
     const cells = Array.from(this.gridEl.querySelectorAll('.cell'));
     if (cells.length === 0) return;
 
-    let idx = Math.floor(Math.random() * cells.length);
-    if (idx === this.currentIndex) {
-      idx = (idx + 1) % cells.length;
-    }
-
+    const idx = this.getNextIndex();
     this._placeInCell(idx);
 
     if (this.timerId) clearTimeout(this.timerId);
